@@ -1,30 +1,21 @@
-import { StyleSheet, FlatList, SafeAreaView } from 'react-native'
-import ListItem from './componets/ListItem'
-import articles from './dummies/articles'
+import React from 'react'
+import AppNavigator from './navigation/AppNavigator'
+import { Provider } from 'react-redux'
+import store, { persistor } from './store'
+import { PersistGate } from 'redux-persist/integration/react'
+import { LogBox } from 'react-native'
+
+LogBox.ignoreLogs([
+  "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
+])
+LogBox.ignoreLogs(['Remote debugger'])
 
 export default function App() {
-  const renderItem = ({ item }) => (
-    <ListItem
-      imageUrl={item.urlToImage}
-      title={item.title}
-      author={item.author}
-    />
-  )
-
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={articles}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => item.id}
-      />
-    </SafeAreaView>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <AppNavigator />
+      </PersistGate>
+    </Provider>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-})
